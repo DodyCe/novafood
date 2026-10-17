@@ -1,0 +1,158 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap');
+
+/* style.css - Paleta comida viva + Bootstrap + animaciones + responsive total */
+/* Colores: rojo #D62828, naranja #F77F00, amarillo #FCBF49 */
+:root {
+  --rojo:    #d62828;
+  --naranja: #f77f00;
+  --amarillo:#fcbf49;
+  --crema:   #fff8f0;
+  --sombra:  rgba(214,40,40,.12);
+}
+* { box-sizing: border-box; }
+body { background: var(--crema); font-family: 'Outfit', Arial, sans-serif; color: #1a1a1a; }
+img  { max-width: 100%; }
+
+/* ── ENCABEZADO premium ────────────────────────────────────────────────────── */
+.header-nova {
+  background: linear-gradient(100deg, #c0181f 0%, var(--rojo) 35%, var(--naranja) 80%, #ffaa00 100%);
+  color: #fff;
+  padding: 1.4rem 2rem 1.4rem 5rem !important;
+  position: relative; overflow: hidden;
+  box-shadow: 0 4px 24px rgba(214,40,40,.3);
+}
+/* Sutil círculo decorativo en el fondo */
+.header-nova::after {
+  content: '';
+  position: absolute; top: -40px; right: -40px;
+  width: 180px; height: 180px;
+  background: rgba(255,255,255,.07);
+  border-radius: 50%; pointer-events: none;
+}
+.header-nova h1 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700; font-size: 1.9rem; letter-spacing: -.5px;
+  display: flex; align-items: center; gap: .55rem; margin: 0;
+  text-shadow: 0 2px 8px rgba(0,0,0,.18);
+}
+.header-nova h1 svg { filter: drop-shadow(0 2px 4px rgba(0,0,0,.2)); }
+.header-nova p {
+  font-size: .85rem; font-weight: 500; letter-spacing: .5px;
+  text-transform: uppercase; margin: .2rem 0 0; opacity: .8;
+}
+@media (max-width: 767px) {
+  .header-nova { padding: 1rem 1rem 1rem 4rem !important; }
+  .header-nova h1 { font-size: 1.4rem; }
+}
+
+/* ── DASHBOARD cards ──────────────────────────────────────────────────────── */
+.card-dash {
+  background: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 14px 12px;
+  height: 100%;
+  box-shadow: 0 2px 16px var(--sombra);
+  transition: transform .2s, box-shadow .2s;
+  border-left: 4px solid var(--naranja);
+  position: relative; overflow: hidden;
+}
+.card-dash:hover { transform: translateY(-2px); box-shadow: 0 6px 24px var(--sombra); }
+.card-dash::before {
+  content: '';
+  position: absolute; top:-16px; right:-16px;
+  width: 70px; height: 70px;
+  background: linear-gradient(135deg, var(--amarillo), var(--naranja));
+  border-radius: 50%; opacity: .12;
+}
+.card-dash small  { color: #666; font-size: .78rem; font-weight: 600; text-transform: uppercase; letter-spacing: .4px; }
+.card-dash strong { display: block; font-size: 1.35rem; font-weight: 700; color: var(--rojo); overflow-wrap: anywhere; margin-top: 2px; }
+
+/* ── Utilidades de color Bootstrap personalizadas ─────────────────────────── */
+.text-rojo      { color: var(--rojo); }
+.bg-naranja     { background-color: var(--naranja) !important; }
+.border-nova    { border-top: 4px solid var(--naranja) !important; }
+
+/* ── Botones ─────────────────────────────────────────────────────────────── */
+.btn-rojo         { background: var(--rojo); color: #fff; font-weight: 600; border-radius: 10px; }
+.btn-rojo:hover   { background: #b81f1f; color: #fff; }
+.btn-outline-nova { border: 2px solid var(--naranja); color: var(--naranja); background: #fff; border-radius: 10px; font-weight: 500; }
+.btn-outline-nova:hover { background: var(--naranja); color: #fff; }
+
+/* ANIMACIONES en botones */
+.btn-nova { transition: transform .15s ease, box-shadow .15s ease, background .15s ease; }
+.btn-nova:hover  { transform: scale(1.05); box-shadow: 0 4px 14px rgba(214,40,40,.28); }
+.btn-nova:active { transform: scale(0.95); box-shadow: none; }
+.btn-nova:focus-visible { outline: 3px solid var(--amarillo); outline-offset: 2px; }
+
+/* ── Modal header ─────────────────────────────────────────────────────────── */
+.modal-header-nova {
+  background: linear-gradient(100deg, var(--rojo), var(--naranja));
+  color: #fff;
+  border-radius: 0;
+  box-shadow: 0 2px 12px rgba(0,0,0,.15);
+}
+.modal-header-nova .modal-title {
+  font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.1rem;
+  display: flex; align-items: center; gap: .5rem;
+}
+.modal-header-nova .modal-title svg { flex-shrink: 0; }
+
+/* ── Card contenedor pedido ───────────────────────────────────────────────── */
+.card { border-radius: 14px !important; border: none !important; }
+.card.shadow-sm { box-shadow: 0 2px 18px rgba(0,0,0,.07) !important; }
+.card.border-nova { border-top: 4px solid var(--naranja) !important; }
+
+/* ── IMAGEN producto ─────────────────────────────────────────────────────── */
+.prod-img {
+  width: 60px; height: 60px; object-fit: cover; flex-shrink: 0;
+  border-radius: 12px; border: 2px solid var(--naranja); background: #fff;
+}
+.prod-img-sm { width: 48px; height: 48px; }
+.prod-emoji  { display:flex;align-items:center;justify-content:center;font-size:28px;background:var(--amarillo); }
+.min-w-0     { min-width: 0; }
+
+/* ── Tarjeta producto ─────────────────────────────────────────────────────── */
+.card-prod {
+  animation: fadeUp .3s ease;
+  border-left: 4px solid var(--amarillo) !important;
+  border-radius: 12px !important;
+  transition: box-shadow .2s;
+}
+.card-prod:hover { box-shadow: 0 4px 20px var(--sombra) !important; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+
+/* ── Botón + ──────────────────────────────────────────────────────────────── */
+.btn-add { transition: transform .15s ease, background .15s ease; }
+.btn-add:hover { transform: scale(1.15) rotate(-5deg); }
+
+/* ── Total con descuento ─────────────────────────────────────────────────── */
+.con-descuento { animation: pulseAmarillo 1s ease infinite; border-radius: 8px; padding: 0 8px; }
+@keyframes pulseAmarillo { 0%,100%{background:transparent;} 50%{background:#fff3cd;} }
+
+/* ── Mensaje ─────────────────────────────────────────────────────────────── */
+#mensaje { transition:opacity .25s ease,transform .25s ease; }
+#mensaje:not(.d-none) { animation:slideDown .25s ease; }
+@keyframes slideDown { from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:none;} }
+
+/* ── Pedido sticky ───────────────────────────────────────────────────────── */
+@media (min-width:768px) { .pedido-sticky { position:sticky; top:12px; } }
+
+/* ── Responsivo ──────────────────────────────────────────────────────────── */
+@media (max-width:767px) {
+  .card-dash strong     { font-size: 1.1rem; }
+  .card-prod .card-body { flex-wrap: wrap; }
+  #tablaGestor .d-flex  { flex-wrap: wrap; }
+}
+@media (max-width:380px) {
+  .prod-img { width:48px; height:48px; }
+  .btn-add  { padding: 4px 12px; }
+}
+
+/* Inputs sin zoom en iOS */
+input, select { font-size: 16px; }
+
+/* Respeta prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  * { animation:none !important; transition:none !important; }
+}

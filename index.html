@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NovaFood - Gestor de Pedidos</title>
+  <!-- Bootstrap 5: mejora el estilo base. Los colores vivos se definen en css/style.css -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- Botón hamburguesa: lo crea js/menu.js arriba a la izquierda -->
+  <!-- ENCABEZADO comida: gradient rojo -> naranja -->
+  <header class="header-nova text-center py-4 px-5">
+    <h1 class="m-0">
+      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 2-2.3 2.3a3 3 0 0 0 0 4.2l1.8 1.8a3 3 0 0 0 4.2 0L22 8"/><path d="M15 15 3.3 3.3a4.2 4.2 0 0 0 0 6l7.3 7.3c.7.7 2 .7 2.8 0L15 15Zm0 0 7 7"/><path d="m2.1 21.8 6.4-6.3"/><path d="m19 5-7 7"/></svg>
+      NovaFood
+    </h1>
+    <p class="m-0 opacity-75">Gestor de pedidos web</p>
+  </header>
+
+  <main class="container my-3">
+    <!-- DASHBOARD: Ventas y Pedidos son ACUMULADOS de facturas (punto 6) -->
+    <section class="row g-2 mb-3 text-center">
+      <div class="col-6 col-md-3"><div class="card-dash"><small>Ventas hoy</small><strong id="dashVentas">$ 0</strong></div></div>
+      <div class="col-6 col-md-3"><div class="card-dash"><small>Pedidos</small><strong id="dashPedidos">0</strong></div></div>
+      <div class="col-6 col-md-3"><div class="card-dash"><small>Productos</small><strong id="dashProductos">0</strong></div></div>
+      <div class="col-6 col-md-3"><div class="card-dash"><small>Stock bajo</small><strong id="dashStockBajo">0</strong></div></div>
+    </section>
+
+    <!-- MENSAJE: aviso de stock / confirmación. ui.js lo muestra y oculta solo -->
+    <div id="mensaje" class="alert alert-danger d-none" role="alert"></div>
+
+    <div class="row g-3">
+      <!-- COLUMNA IZQUIERDA: catálogo + búsqueda y filtros -->
+      <section class="col-12 col-md-8" id="seccionCatalogo">
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <h2 class="h5">Catálogo de productos</h2>
+            <!-- Barra de búsqueda y filtros (Actividad 4 + retos) con Bootstrap -->
+            <div class="row g-2 mb-3">
+              <div class="col-12 col-sm-6 col-md-4"><input type="text" id="busqueda" class="form-control" placeholder="Buscar por nombre..." /></div>
+              <div class="col-6 col-sm-6 col-md-3">
+                <select id="filtroCategoria" class="form-select">
+                  <option value="Todas">Todas las categorías</option>
+                  <option value="Comida">Comida</option>
+                  <option value="Bebidas">Bebidas</option>
+                  <option value="Combos">Combos</option>
+                  <option value="Postres">Postres</option>
+                </select>
+              </div>
+              <div class="col-6 col-sm-6 col-md-3">
+                <select id="ordenPrecio" class="form-select">
+                  <option value="ninguno">Sin ordenar</option>
+                  <option value="asc">Menor a mayor precio</option>
+                </select>
+              </div>
+              <div class="col-12 col-sm-6 col-md-2"><button id="btnLimpiar" class="btn btn-outline-nova w-100 btn-nova">Limpiar</button></div>
+            </div>
+            <!-- Aquí ui.js dibuja cada producto con forEach() -->
+            <div id="catalogo" class="d-flex flex-column gap-2"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLUMNA DERECHA: resumen del pedido -->
+      <aside class="col-12 col-md-4" id="seccionPedido">
+        <div class="card shadow-sm border-nova pedido-sticky">
+          <div class="card-body">
+            <!-- Reto avanzado: número de pedido + fecha/hora -->
+            <h2 class="h5">Pedido <span id="numeroPedido" class="badge bg-naranja">#0048</span></h2>
+            <small id="fechaPedido" class="text-muted"></small>
+            <!-- Aquí ui.js dibuja el carrito -->
+            <div id="carrito" class="my-2"></div>
+            <hr />
+            <p class="mb-1">Subtotal <strong id="subtotal" class="float-end">$ 0</strong></p>
+            <p class="mb-1">Descuento <strong id="descuento" class="float-end text-success">-$ 0</strong></p>
+            <small class="text-muted">10% desde $50.000 · 15% desde $100.000</small>
+            <h3 class="h5 mt-2 text-rojo d-flex justify-content-between">TOTAL <span id="total">$ 0</span></h3>
+            <button id="btnConfirmar" class="btn btn-rojo w-100 mt-2 btn-nova">Confirmar pedido</button>
+            <div class="d-flex gap-2 mt-2">
+              <button id="btnVaciar" class="btn btn-outline-secondary w-100 btn-nova">Vaciar</button>
+              <button id="btnRestablecer" class="btn btn-outline-nova w-100 btn-nova" title="Devuelve el stock inicial para la demo">Restablecer stock</button>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- MODAL HISTORIAL: pestaña del menú hamburguesa (punto 4). ui.js lo dibuja. -->
+  <div class="modal fade" id="modalHistorial" tabindex="-1" aria-labelledby="tituloHistorial" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-fullscreen-sm-down">
+      <div class="modal-content">
+        <div class="modal-header modal-header-nova">
+          <h5 class="modal-title" id="tituloHistorial">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1z"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+            Historial de facturas
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div id="tablaHistorial"></div>
+          <hr />
+          <p class="d-flex justify-content-between fw-bold">Total vendido <span id="totalHistorial" class="text-rojo">$ 0</span></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="btnLimpiarHistorial" class="btn btn-outline-danger btn-nova">Borrar historial</button>
+          <button type="button" class="btn btn-rojo btn-nova" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL GESTOR: CRUD de productos y combos (punto 3 del usuario). -->
+  <div class="modal fade" id="modalGestor" tabindex="-1" aria-labelledby="tituloGestor" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable modal-fullscreen-sm-down">
+      <div class="modal-content">
+        <div class="modal-header modal-header-nova">
+          <h5 class="modal-title" id="tituloGestor">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 9.4l-9-5.19"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            Gestor de productos
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Formulario crear/editar con foto -->
+          <form id="formProducto" class="border rounded p-3 mb-3 bg-light">
+            <input type="hidden" id="prodId" value="" />
+            <div class="row g-2">
+              <div class="col-12 col-md-6">
+                <label class="form-label" for="prodNombre">Nombre</label>
+                <input type="text" id="prodNombre" class="form-control" placeholder="Ej: Combo paisa" required />
+              </div>
+              <div class="col-6 col-md-3">
+                <label class="form-label" for="prodCategoria">Categoría</label>
+                <select id="prodCategoria" class="form-select">
+                  <option value="Comida">Comida</option>
+                  <option value="Bebidas">Bebidas</option>
+                  <option value="Combos">Combos</option>
+                  <option value="Postres">Postres</option>
+                </select>
+              </div>
+              <div class="col-6 col-md-3">
+                <label class="form-label" for="prodEmoji">Icono</label>
+                <select id="prodEmoji" class="form-select">
+                  <option value="🍔">🍔 Hamburguesa</option>
+                  <option value="🍕">🍕 Pizza</option>
+                  <option value="🌮">🌮 Tacos</option>
+                  <option value="🍟">🍟 Papas/Combo</option>
+                  <option value="🍱">🍱 Ejecutivo</option>
+                  <option value="☕">☕ Café</option>
+                  <option value="🍋">🍋 Limonada</option>
+                  <option value="🍰">🍰 Torta</option>
+                  <option value="🍨">🍨 Helado</option>
+                  <option value="🥗">🥗 Ensalada</option>
+                  <option value="🍴">🍴 Otro</option>
+                </select>
+              </div>
+              <div class="col-6 col-md-3">
+                <label class="form-label" for="prodPrecio">Precio</label>
+                <input type="number" id="prodPrecio" class="form-control" min="0" step="500" placeholder="15000" required />
+              </div>
+              <div class="col-6 col-md-3">
+                <label class="form-label" for="prodStock">Stock</label>
+                <input type="number" id="prodStock" class="form-control" min="0" step="1" placeholder="10" required />
+              </div>
+              <div class="col-12 col-md-6">
+                <label class="form-label" for="prodFoto">Foto (opcional)</label>
+                <input type="file" id="prodFoto" class="form-control" accept="image/*" />
+                <small class="text-muted">Si no subes foto se usa el icono.</small>
+              </div>
+            </div>
+            <div class="d-flex gap-2 mt-3">
+              <button type="submit" id="btnGuardarProd" class="btn btn-rojo btn-nova">Guardar producto</button>
+              <button type="button" id="btnCancelarEdicion" class="btn btn-outline-secondary btn-nova d-none">Cancelar edición</button>
+            </div>
+          </form>
+          <!-- Lista con mostrar/ocultar, editar y borrar -->
+          <div id="tablaGestor"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-rojo btn-nova" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- app.js coordina todo. type="module" es OBLIGATORIO para usar import/export.
+       En VS Code ábrelo con Live Server (Go Live), no con doble clic. -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
